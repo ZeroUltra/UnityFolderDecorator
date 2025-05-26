@@ -1,0 +1,2 @@
+# UnityFolderIconOverride
+用于给Unity文件夹添加icon
