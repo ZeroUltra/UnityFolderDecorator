@@ -1,0 +1,16 @@
+{
+  "name": "com.zeroultra.unityfoldericonoverride",
+  "version": "1.0.0",
+  "displayName": "UnityFolderIconOverride",
+  "description": "UnityFolderIconOverride",
+  "documentationUrl": "https://github.com/ZeroUltra/UnityFolderIconOverride",
+  "changelogUrl": "https://github.com/ZeroUltra/UnityFolderIconOverride",
+  "licensesUrl": "https://github.com/ZeroUltra/UnityFolderIconOverride",
+  "hideInEditor": true,
+  "keywords": [
+    "FolderIconOverride"
+  ],
+  "author": {
+    "name": "ZeroUltra"
+  }
+}
