@@ -6,6 +6,13 @@
 
 
 
+## 使用步骤
+
+* 直接下载压缩包导入 或者使用packagemanager add github url
+* 然后鼠标右键创建 配置文件
+
+​	![image-20250526213420269](https://raw.githubusercontent.com/ZeroUltra/MediaLibrary/main/Imgs/202505262134054.png)
+
 
 
 ## 参数说明
