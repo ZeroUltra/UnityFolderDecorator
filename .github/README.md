@@ -4,6 +4,8 @@
 
 ##### 小视图
 
+ ![image-20250820141235102](C:\Users\y\AppData\Roaming\Typora\typora-user-images\image-20250820141235102.png)
+
 ![image-20250820133832694](https://raw.githubusercontent.com/ZeroUltra/MediaLibrary/main/Imgs/202508201338136.png)
 
 ##### 大视图
