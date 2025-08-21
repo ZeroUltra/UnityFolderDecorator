@@ -51,8 +51,8 @@ namespace ZeroUltra.FolderDecorator
     {
         static Color32 defaultLeftColor;
         static Color32 defaultRightColor;
-        //static Color32 SelectedColor = new Color32(61, 96, 145, 255);
-
+        static Color32 SelectedColor = new Color32(61, 96, 145, 255);
+        private static HashSet<string> mouseDownGuids = new HashSet<string>();
         static Dictionary<string, FolderDecoratorSetting.FolderDecorators> dictFolderOverridies = new();
         static FolderIconOverrideDraw()
         {
@@ -86,6 +86,12 @@ namespace ZeroUltra.FolderDecorator
             string assetPath = AssetDatabase.GUIDToAssetPath(guid);
             if (dictFolderOverridies.TryGetValue(guid, out var folderSetData))
             {
+
+                // 判断是否要显示自定义选中颜色
+                bool isSelected = Selection.assetGUIDs.Contains(guid);
+                ;
+
+
                 //绘制背景
                 int styleIndex = (int)folderSetData.LabelStyle;
                 GUIStyle labelStyle = new GUIStyle(GUI.skin.label)
@@ -111,7 +117,7 @@ namespace ZeroUltra.FolderDecorator
                     pos.height = 14f; //默认是16
                     pos.y += 1f;//下移一个单位
                     //绘制默认背景 覆盖掉原来 不然会有重影
-                    GUI.DrawTexture(pos, EditorGUIUtility.whiteTexture, ScaleMode.StretchToFill, false, 0, defaultLeftColor, 0, 0);
+                    GUI.DrawTexture(pos, EditorGUIUtility.whiteTexture, ScaleMode.StretchToFill, false, 0, isSelected ? SelectedColor : defaultLeftColor, 0, 0);
                     GUI.DrawTexture(pos, EditorGUIUtility.whiteTexture, ScaleMode.StretchToFill, false, 0, folderSetData.BackgroundColor, folderSetData.BackgroundBorderWidth, folderSetData.BacgroundRadius);
                     EditorGUI.LabelField(pos, tooltipContent, labelStyle);
                 }
@@ -121,7 +127,7 @@ namespace ZeroUltra.FolderDecorator
                     pos.x += 19.5f;
                     pos.height = 14f;
                     pos.y += 1f;
-                    GUI.DrawTexture(pos, EditorGUIUtility.whiteTexture, ScaleMode.StretchToFill, false, 0, defaultRightColor, 0, 0);
+                    GUI.DrawTexture(pos, EditorGUIUtility.whiteTexture, ScaleMode.StretchToFill, false, 0, isSelected ? SelectedColor : defaultRightColor, 0, 0);
                     GUI.DrawTexture(pos, EditorGUIUtility.whiteTexture, ScaleMode.StretchToFill, false, 0, folderSetData.BackgroundColor, folderSetData.BackgroundBorderWidth, folderSetData.BacgroundRadius);
                     EditorGUI.LabelField(pos, tooltipContent, labelStyle);
                 }
@@ -129,7 +135,7 @@ namespace ZeroUltra.FolderDecorator
                 {
                     var pos = selectionRect;
                     FitIconRect(ref pos);
-                    GUI.DrawTexture(pos, EditorGUIUtility.whiteTexture, ScaleMode.StretchToFill, false, 0, defaultRightColor, 0, 0);
+                    GUI.DrawTexture(pos, EditorGUIUtility.whiteTexture, ScaleMode.StretchToFill, false, 0, isSelected ? SelectedColor : defaultRightColor, 0, 0);
                     var folderIcon = IsEmptyFolder(assetPath) ? EditorGUIUtility.IconContent("folderempty icon") : EditorGUIUtility.IconContent("folder icon");
                     GUI.DrawTexture(pos, folderIcon.image, ScaleMode.StretchToFill, false, 0, folderSetData.BackgroundColor, 0, 1);
                 }
