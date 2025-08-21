@@ -22,7 +22,7 @@
 
 * **Folder**  目标文件夹 (直接拖入unity文件夹)
 * **BuiltinIconName** 内置图标名字 (可以查看 [halak/unity-editor-icons](https://github.com/halak/unity-editor-icons)   或者 [jasursadikov/unity-editor-icons: ✨ Gallery of Unity Editor icons (6000.0.7f1)](https://github.com/jasursadikov/unity-editor-icons))
-* **CustomIcon** 指定一个图片资源
+* **CustomIcon** 指定一个图片资源 
 * **IconOffset** 图标偏移
 * **LabelStyle** 文本风格
 * **LabelColor** 文本颜色(如果透明度为0,使用默认颜色)

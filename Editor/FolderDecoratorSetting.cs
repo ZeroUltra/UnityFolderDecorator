@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -18,6 +19,10 @@ namespace ZeroUltra.FolderDecorator
 
     public class FolderDecoratorSetting : ScriptableObject
     {
+        [Tooltip("左侧默认背景色(drak主题下默认大致为(56,56,56,255))")]
+        public Color defaultLeftColor = new Color32(56, 56, 56, 255);
+        [Tooltip("右侧默认背景色(drak主题下默认大致为(51,51,51,255))")]
+        public Color defaultRightColor = new Color32(51, 51, 51, 255);
         public FolderDecorators[] folderDecorators;
 
         [System.Serializable]
@@ -44,31 +49,37 @@ namespace ZeroUltra.FolderDecorator
     [InitializeOnLoad]
     public class FolderIconOverrideDraw
     {
+        static Color32 defaultLeftColor;
+        static Color32 defaultRightColor;
+        //static Color32 SelectedColor = new Color32(61, 96, 145, 255);
+
         static Dictionary<string, FolderDecoratorSetting.FolderDecorators> dictFolderOverridies = new();
         static FolderIconOverrideDraw()
         {
-            EditorApplication.delayCall += () =>
+            // EditorApplication.delayCall += () =>
+            // {
+            dictFolderOverridies.Clear();
+            var config = FindScriptableObject<FolderDecoratorSetting>();
+            defaultLeftColor = config.defaultLeftColor;
+            defaultRightColor = config.defaultRightColor;
+            if (config != null)
             {
-                dictFolderOverridies.Clear();
-                var config = FindScriptableObject<FolderDecoratorSetting>();
-                if (config != null)
+                var foldericons = config.folderDecorators;
+                foreach (var item in foldericons)
                 {
-                    var foldericons = config.folderDecorators;
-                    foreach (var item in foldericons)
-                    {
 
-                        var folderPath = AssetDatabase.GetAssetPath(item.Folder);
-                        if (AssetDatabase.IsValidFolder(folderPath))
-                        {
-                            var guid = AssetDatabase.AssetPathToGUID(folderPath);
-                            dictFolderOverridies.Add(guid, item);
-                        }
-                        else
-                            Debug.LogError("Folder path is invalid: " + folderPath);
+                    var folderPath = AssetDatabase.GetAssetPath(item.Folder);
+                    if (AssetDatabase.IsValidFolder(folderPath))
+                    {
+                        var guid = AssetDatabase.AssetPathToGUID(folderPath);
+                        dictFolderOverridies.Add(guid, item);
                     }
-                    EditorApplication.projectWindowItemOnGUI += OnProjectWindowItemOnGUI;
+                    else
+                        Debug.LogError("Folder path is invalid: " + folderPath);
                 }
-            };
+                EditorApplication.projectWindowItemOnGUI += OnProjectWindowItemOnGUI;
+            }
+            //};
         }
         private static void OnProjectWindowItemOnGUI(string guid, Rect selectionRect)
         {
@@ -99,8 +110,9 @@ namespace ZeroUltra.FolderDecorator
                     pos.x += 16.5f;
                     pos.height = 14f; //默认是16
                     pos.y += 1f;//下移一个单位
+                    //绘制默认背景 覆盖掉原来 不然会有重影
+                    GUI.DrawTexture(pos, EditorGUIUtility.whiteTexture, ScaleMode.StretchToFill, false, 0, defaultLeftColor, 0, 0);
                     GUI.DrawTexture(pos, EditorGUIUtility.whiteTexture, ScaleMode.StretchToFill, false, 0, folderSetData.BackgroundColor, folderSetData.BackgroundBorderWidth, folderSetData.BacgroundRadius);
-
                     EditorGUI.LabelField(pos, tooltipContent, labelStyle);
                 }
                 else if (IsSmall(selectionRect))
@@ -109,6 +121,7 @@ namespace ZeroUltra.FolderDecorator
                     pos.x += 19.5f;
                     pos.height = 14f;
                     pos.y += 1f;
+                    GUI.DrawTexture(pos, EditorGUIUtility.whiteTexture, ScaleMode.StretchToFill, false, 0, defaultRightColor, 0, 0);
                     GUI.DrawTexture(pos, EditorGUIUtility.whiteTexture, ScaleMode.StretchToFill, false, 0, folderSetData.BackgroundColor, folderSetData.BackgroundBorderWidth, folderSetData.BacgroundRadius);
                     EditorGUI.LabelField(pos, tooltipContent, labelStyle);
                 }
@@ -116,6 +129,7 @@ namespace ZeroUltra.FolderDecorator
                 {
                     var pos = selectionRect;
                     FitIconRect(ref pos);
+                    GUI.DrawTexture(pos, EditorGUIUtility.whiteTexture, ScaleMode.StretchToFill, false, 0, defaultRightColor, 0, 0);
                     var folderIcon = IsEmptyFolder(assetPath) ? EditorGUIUtility.IconContent("folderempty icon") : EditorGUIUtility.IconContent("folder icon");
                     GUI.DrawTexture(pos, folderIcon.image, ScaleMode.StretchToFill, false, 0, folderSetData.BackgroundColor, 0, 1);
                 }
