@@ -52,34 +52,34 @@ namespace ZeroUltra.FolderDecorator
         static Color32 defaultLeftColor;
         static Color32 defaultRightColor;
         static Color32 SelectedColor = new Color32(61, 96, 145, 255);
-        private static HashSet<string> mouseDownGuids = new HashSet<string>();
         static Dictionary<string, FolderDecoratorSetting.FolderDecorators> dictFolderOverridies = new();
         static FolderIconOverrideDraw()
         {
-            // EditorApplication.delayCall += () =>
-            // {
-            dictFolderOverridies.Clear();
-            var config = FindScriptableObject<FolderDecoratorSetting>();
-            defaultLeftColor = config.defaultLeftColor;
-            defaultRightColor = config.defaultRightColor;
-            if (config != null)
+            EditorApplication.delayCall += () =>
             {
-                var foldericons = config.folderDecorators;
-                foreach (var item in foldericons)
+        
+                dictFolderOverridies.Clear();
+                var config = FindScriptableObject<FolderDecoratorSetting>();
+                defaultLeftColor = config.defaultLeftColor;
+                defaultRightColor = config.defaultRightColor;
+                if (config != null)
                 {
-
-                    var folderPath = AssetDatabase.GetAssetPath(item.Folder);
-                    if (AssetDatabase.IsValidFolder(folderPath))
+                    var foldericons = config.folderDecorators;
+                    foreach (var item in foldericons)
                     {
-                        var guid = AssetDatabase.AssetPathToGUID(folderPath);
-                        dictFolderOverridies.Add(guid, item);
+
+                        var folderPath = AssetDatabase.GetAssetPath(item.Folder);
+                        if (AssetDatabase.IsValidFolder(folderPath))
+                        {
+                            var guid = AssetDatabase.AssetPathToGUID(folderPath);
+                            dictFolderOverridies.Add(guid, item);
+                        }
+                        else
+                            Debug.LogError("Folder path is invalid: " + folderPath);
                     }
-                    else
-                        Debug.LogError("Folder path is invalid: " + folderPath);
+                    EditorApplication.projectWindowItemOnGUI += OnProjectWindowItemOnGUI;
                 }
-                EditorApplication.projectWindowItemOnGUI += OnProjectWindowItemOnGUI;
-            }
-            //};
+            };
         }
         private static void OnProjectWindowItemOnGUI(string guid, Rect selectionRect)
         {
@@ -89,8 +89,6 @@ namespace ZeroUltra.FolderDecorator
 
                 // 判断是否要显示自定义选中颜色
                 bool isSelected = Selection.assetGUIDs.Contains(guid);
-                ;
-
 
                 //绘制背景
                 int styleIndex = (int)folderSetData.LabelStyle;
